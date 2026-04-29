@@ -8,7 +8,9 @@ from django.http import JsonResponse
 import pandas as pd
 import json
 
-from migration_management_system.helper.migration_management_system_helper_class import insert_mgn_performance_uploads
+from migration_management_system.helper.migration_management_system_helper_class import get_mgn_performance_uploads, insert_mgn_performance_uploads
+from migration_management_system.helper.model_class import PerformanceUploadsRequest
+from common.common_class.util import build_request_with_user
 class PerformanceUploadsServiceAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -50,7 +52,7 @@ class PerformanceUploadsServiceAPIView(APIView):
             file_name = excel_file.name
 
             # 4. Read the Excel file (ensure data is safe to process)
-            df = pd.read_excel(excel_file)
+            df = pd.read_excel(excel_file, skiprows=1)
 
             # 5. Force all columns to string to prevent type issues
             df = df.astype(str)
@@ -58,8 +60,11 @@ class PerformanceUploadsServiceAPIView(APIView):
             # 6. Replace pandas NaN values with None (so JSON is clean)
             df = df.where(pd.notnull(df), None)
 
+            df = df.loc[:, ~df.columns.str.contains("Unnamed")]
+
+
             # 7. Convert DataFrame to JSON array
-            data_json = df.to_json(orient="records")
+            data_json = df.to_dict(orient="records")
 
             # 8. Call the migration function to insert the data into the database
             result = insert_mgn_performance_uploads(df, company_id, property_id, uploaded_by, file_name, upload_month, upload_year)
@@ -78,8 +83,18 @@ class PerformanceUploadsServiceAPIView(APIView):
     """
 
     def get(self, request):
-        # Your logic here
-        return Response({})        
+        try:
+            record = build_request_with_user(PerformanceUploadsRequest, request, method='GET')
+
+            result = get_mgn_performance_uploads(record)
+
+            return JsonResponse(result)
+
+        except ValidationError as e:
+            return JsonResponse(
+                {"status": "failed", "errors": e.errors()},
+                status=400
+            )             
 
     """
     @ Author: Tanmay Anthony Gomes

@@ -9,7 +9,7 @@ from com_management_system.helper.model_class import PropertyDiagnosisRequest
 from common.common_class.util import build_request_with_user
 
 class PropertyDiagnosisReportServiceAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     """
     @ Author: Tanmay Anthony Gomes

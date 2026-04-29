@@ -2,6 +2,7 @@ import json
 
 from common.common_class.db import call_db_function, get_db_connection
 from common.common_class.util import _response
+from migration_management_system.helper.model_class import PerformanceUploadsRequest
 '''
  # @ Author: Tanmay Anthony Gomes
  # @ Create Time: 
@@ -25,7 +26,7 @@ def insert_mgn_performance_uploads(df, company_id, property_id, uploaded_by, fil
                 "upload_year": upload_year,
                 "data": json.loads(data_json)  # This will be the actual data from the Excel
             }
-
+            print (json.loads(data_json))
             # 3. Call the PostgreSQL function with the prepared data
             rows = call_db_function(conn, "public.fn_insert_mgn_performance_uploads", [json.dumps(p_data)])
             
@@ -39,3 +40,29 @@ def insert_mgn_performance_uploads(df, company_id, property_id, uploaded_by, fil
     
     except Exception as e:
         return {"status": "error", "message": str(e)}
+    
+
+'''
+ # @ Author: Tanmay Anthony Gomes
+ # @ Create Time: 
+ # @ Modified by: Tanmay Anthony Gomes
+ # @ Modified time: 
+ # @ Description: Function for getting asset list from DB
+'''
+def get_mgn_performance_uploads(record: PerformanceUploadsRequest):
+    try:
+        with get_db_connection() as conn: # calling get_db_connection for getting the connection string
+            rows = call_db_function(conn, "public.fn_get_mgn_performance_uploads", [record.json()]) # calling fn_get_assets_list function from DB  to get data.
+
+            if not rows:
+                return _response("failed", "Error Occured While Processing Request")
+
+            result = rows[0]  
+            data = result["data"]
+            if isinstance(data, str):
+                data = json.loads(data)
+
+            return _response(result["status"], result["message"], data)
+
+    except Exception as ex:
+        return _response("error", str(ex))      
