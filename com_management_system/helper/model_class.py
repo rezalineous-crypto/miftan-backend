@@ -93,6 +93,7 @@ class PropertyPerformanceRequest(BaseEntity):
     updated_by: Optional[int] = None
     is_active: Optional[bool] = None
     remarks: Optional[str] = None
+
 #Report Modal
 class PropertyDiagnosisRequest(BaseEntity):
     property_id: Optional[int] = None

@@ -5,7 +5,7 @@ import jwt
 import psycopg2
 from django.conf import settings
 import json
-from auth_management_system.helper.model_class import UsersRequest
+from auth_management_system.helper.model_class import UserEntityAccessRequest, UsersRequest
 from common.common_class.db import call_db_function, get_db_connection
 from common.common_class.util import _response, generate_tokens
 
@@ -166,3 +166,60 @@ def insert_auth_user(record: UsersRequest):
 
     except Exception as ex:
         return _response("error", str(ex))
+    
+
+
+def insert_user_entity_access(record: UserEntityAccessRequest):
+    try:
+        with get_db_connection() as conn:
+            rows = call_db_function(
+                conn,
+                "public.fn_insert_auth_user_entity_access",
+                [record.json()]
+            )
+
+            if not rows:
+                return _response("failed", "No response from server")
+
+            result = rows[0]
+            data = result.get("data")
+
+            if isinstance(data, str):
+                data = json.loads(data)
+
+            return _response(
+                result.get("status"),
+                result.get("message"),
+                data
+            )
+
+    except Exception as ex:
+        return _response("error", str(ex))    
+    
+
+def get_auth_user_entity_access(record: UserEntityAccessRequest):
+    try:
+        with get_db_connection() as conn:
+            rows = call_db_function(
+                conn,
+                "public.fn_get_auth_user_entity_access",
+                [record.json()]
+            )
+
+            if not rows:
+                return _response("failed", "No response from server")
+
+            result = rows[0]
+            data = result.get("data")
+
+            if isinstance(data, str):
+                data = json.loads(data)
+
+            return _response(
+                result.get("status"),
+                result.get("message"),
+                data
+            )
+
+    except Exception as ex:
+        return _response("error", str(ex))  

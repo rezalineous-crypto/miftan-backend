@@ -5,26 +5,26 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from com_management_system.helper.com_management_system_helper_class import get_com_property_monthly_config, insert_com_property_monthly_config
-from com_management_system.helper.model_class import PropertyMonthlyConfigRequest
-from common.common_class.util import build_request_with_user
+from auth_management_system.helper.auth_mamagement_system_helper_class import get_auth_user_entity_access, insert_user_entity_access
+from auth_management_system.helper.model_class import UserEntityAccessRequest
+# from util import build_request_with_user
 
-class PropertyMonthlyConfigServiceAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+class UserEntityAccessServiceAPIView(APIView):
+    #permission_classes = [IsAuthenticated]
 
     """
     @ Author: Tanmay Anthony Gomes
-    @ Create Time: 2026-04-13 04:04 PM
+    @ Create Time: 2026-05-01
     @ Modified by: 
     @ Modified time: 
-    @ Description: API to handle property_monthly_config_service_api insert operations
+    @ Description: API to handle user_entity_access_service_api insert operations
     """
 
     def post(self, request):
         try:
-            record = build_request_with_user(PropertyMonthlyConfigRequest, request, method='POST')
+            record = build_request_with_user(UserEntityAccessRequest, request, method='POST')
 
-            result = insert_com_property_monthly_config(record)
+            result = insert_user_entity_access(record)
 
             return JsonResponse(result)
 
@@ -32,21 +32,21 @@ class PropertyMonthlyConfigServiceAPIView(APIView):
             return JsonResponse(
                 {"status": "failed", "errors": e.errors()},
                 status=400
-            )     
+            )   
 
     """
     @ Author: Tanmay Anthony Gomes
-    @ Create Time: 2026-04-13 04:04 PM
+    @ Create Time: 2026-05-01
     @ Modified by: 
     @ Modified time: 
-    @ Description: API to handle property_monthly_config_service_api get operations
+    @ Description: API to handle user_entity_access_service_api get operations
     """
 
     def get(self, request):
         try:
-            record = build_request_with_user(PropertyMonthlyConfigRequest, request, method='GET')
+            record = build_request_with_user(UserEntityAccessRequest, request, method='GET')
 
-            result = get_com_property_monthly_config(record)
+            result = get_auth_user_entity_access(record)
 
             return JsonResponse(result)
 
@@ -54,14 +54,15 @@ class PropertyMonthlyConfigServiceAPIView(APIView):
             return JsonResponse(
                 {"status": "failed", "errors": e.errors()},
                 status=400
-            )         
+            )   
+      
 
     """
     @ Author: Tanmay Anthony Gomes
-    @ Create Time: 2026-04-13 04:04 PM
+    @ Create Time: 2026-05-01
     @ Modified by: 
     @ Modified time: 
-    @ Description: API to handle property_monthly_config_service_api update operations
+    @ Description: API to handle user_entity_access_service_api update operations
     """
 
     def put(self, request):
@@ -70,10 +71,10 @@ class PropertyMonthlyConfigServiceAPIView(APIView):
         
     """
     @ Author: Tanmay Anthony Gomes
-    @ Create Time: 2026-04-13 04:04 PM
+    @ Create Time: 2026-05-01
     @ Modified by: 
     @ Modified time: 
-    @ Description: API to handle property_monthly_config_service_api delete operations
+    @ Description: API to handle user_entity_access_service_api delete operations
     """
 
     def delete(self, request):

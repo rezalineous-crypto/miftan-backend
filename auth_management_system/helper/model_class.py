@@ -38,3 +38,12 @@ class UsersRequest(BaseEntity):
     updated_at: Optional[datetime] = None
     updated_by: Optional[int] = None
     remarks: Optional[str] = None    
+
+class UserEntityAccessRequest(BaseEntity):
+    id: Optional[int] = None
+    user_id: Optional[int] = None
+    entity_type: Optional[str] = None
+    entity_id: Optional[int] = None
+    created_at: Optional[datetime] = None
+    created_by: Optional[int] = None
+    is_active: Optional[bool] = None    
