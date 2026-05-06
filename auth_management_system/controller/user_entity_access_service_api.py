@@ -7,7 +7,7 @@ from rest_framework import status
 
 from auth_management_system.helper.auth_mamagement_system_helper_class import get_auth_user_entity_access, insert_user_entity_access
 from auth_management_system.helper.model_class import UserEntityAccessRequest
-# from util import build_request_with_user
+from common.common_class.util import build_request_with_user
 
 class UserEntityAccessServiceAPIView(APIView):
     #permission_classes = [IsAuthenticated]
